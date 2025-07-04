@@ -15,7 +15,8 @@
     "tailwind-merge",
     "class-variance-authority",
     "lucide-react",
-    "next-themes"
+    "next-themes",
+    "input-otp"
   ],
   "registryDependencies": [
     "badge",
@@ -26,8 +27,8 @@
     "sonner",
     "dialog",
     "form",
-    "text-field",
-    "otp-field"
+    "input",
+    "input-otp"
   ],
   "files": [
     {
