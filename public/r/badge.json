@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge",
+  "type": "registry:ui",
+  "dependencies": [
+    "class-variance-authority",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/ui/badge.tsx",
+      "content": "import { cva, type VariantProps } from 'class-variance-authority';\nimport * as React from 'react';\nimport { Fragment } from 'react';\nimport { cn } from '@/lib/theme-utils';\n\nconst badgeVariants = cva(\n  'theme-default:shadow-xs box-border inline-flex items-center overflow-clip rounded-2xl border border-transparent font-medium',\n  {\n    variants: {\n      variant: {\n        default: 'bg-primary text-primary-foreground theme-default:border-primary',\n        secondary: 'bg-muted text-muted-foreground theme-default:border-muted-foreground/25',\n        outline: 'border-border',\n        info: 'bg-info text-info-foreground theme-default:border-info-foreground/25',\n        success: 'bg-success theme-default:border-success-foreground/25 text-success-foreground',\n        warning: 'bg-warning theme-default:border-warning-foreground/25 text-warning-foreground',\n        destructive:\n          'bg-destructive theme-default:border-destructive-foreground/25 text-destructive-foreground',\n      },\n      size: {\n        sm: 'px-1.5 py-0.5 text-xs',\n        md: 'px-2 py-1 text-sm',\n        lg: 'px-2.5 py-1.5 text-sm',\n      },\n    },\n    defaultVariants: {\n      variant: 'default',\n      size: 'md',\n    },\n  },\n);\n\nfunction Badge({\n  className,\n  variant,\n  size,\n\n  asChild = false,\n  ...props\n}: React.ComponentProps<'span'> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {\n  const Comp = asChild ? Fragment : 'span';\n\n  return (\n    <Comp\n      data-slot=\"badge\"\n      className={cn(badgeVariants({ variant, size }), className)}\n      {...props}\n    />\n  );\n}\n\nexport { Badge, badgeVariants };\n",
+      "type": "registry:ui",
+      "target": "components/ui/badge.tsx"
+    }
+  ]
+}

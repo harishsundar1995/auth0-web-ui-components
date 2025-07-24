@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spinner",
+  "type": "registry:ui",
+  "dependencies": [
+    "class-variance-authority",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/components/ui/spinner.tsx",
+      "content": "import { cva, VariantProps } from 'class-variance-authority';\nimport * as React from 'react';\nimport { cn } from '@/lib/theme-utils';\n\nconst spinnerVariants = cva(\n  'text-surface inline-block h-8 w-8 rounded-full duration-[5000] ease-linear',\n  {\n    variants: {\n      variant: {\n        dots: 'border-primary animate-[spin_5s_linear_infinite] border-6 border-dotted',\n        pulse: 'bg-primary animate-pulse',\n        solid: 'border-primary animate-spin border-2 border-e-transparent',\n      },\n      size: {\n        sm: 'size-4',\n        md: 'size-8',\n        lg: 'size-12',\n      },\n    },\n    defaultVariants: {\n      variant: 'solid',\n      size: 'md',\n    },\n  },\n);\n\nexport interface SpinnerProps\n  extends React.HTMLAttributes<HTMLDivElement>,\n    VariantProps<typeof spinnerVariants> {}\n\nexport function Spinner({ variant, size, className, ...props }: SpinnerProps) {\n  return (\n    <div className={cn(spinnerVariants({ variant, size }), className)} {...props}>\n      <span className=\"sr-only\">Loading...</span>\n    </div>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/ui/spinner.tsx"
+    }
+  ]
+}
