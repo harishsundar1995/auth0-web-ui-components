@@ -127,6 +127,18 @@
       "target": "hooks/index.ts"
     },
     {
+      "path": "src/hooks/use-core-client-initialization.ts",
+      "content": "import * as React from 'react';\nimport type {\n  CoreClientInterface,\n  AuthDetailsCore,\n  I18nInitOptions,\n} from '@auth0-web-ui-components/core';\nimport { createCoreClient } from '@auth0-web-ui-components/core';\n\ninterface UseCoreClientInitializationProps {\n  authDetails: AuthDetailsCore;\n  i18nOptions?: I18nInitOptions;\n}\n\n/**\n * Custom hook to handle CoreClient initialization\n */\nexport const useCoreClientInitialization = ({\n  authDetails,\n  i18nOptions,\n}: UseCoreClientInitializationProps) => {\n  const [coreClient, setCoreClient] = React.useState<CoreClientInterface | null>(null);\n\n  React.useEffect(() => {\n    const initializeCoreClient = async () => {\n      try {\n        const initializedCoreClient = await createCoreClient(authDetails, i18nOptions);\n\n        setCoreClient(initializedCoreClient);\n      } catch (error) {\n        console.error('Failed to initialize CoreClient:', error);\n        setCoreClient(null);\n      }\n    };\n\n    initializeCoreClient();\n  }, [\n    authDetails.contextInterface?.getAccessTokenSilently,\n    i18nOptions?.currentLanguage,\n    i18nOptions?.fallbackLanguage,\n  ]);\n\n  return coreClient;\n};\n",
+      "type": "registry:hook",
+      "target": "hooks/use-core-client-initialization.ts"
+    },
+    {
+      "path": "src/hooks/use-core-client.ts",
+      "content": "import * as React from 'react';\nimport type { CoreClientInterface } from '@auth0-web-ui-components/core';\n\nconst CoreClientContext = React.createContext<{\n  coreClient: CoreClientInterface | null;\n}>({\n  coreClient: null,\n});\n\n/**\n * Hook to access the CoreClient instance from context.\n *\n * Provides access to the initialized CoreClient which handles API calls and business logic.\n *\n * @returns {{ coreClient: CoreClientInterface | null }} The current CoreClient instance or null if not initialized.\n *\n * @throws {Error} Throws if used outside of an Auth0ComponentProvider.\n */\nexport const useCoreClient = () => {\n  const context = React.useContext(CoreClientContext);\n  if (!context) {\n    throw new Error('useCoreClient must be used within Auth0ComponentProvider');\n  }\n  return context;\n};\n\nexport { CoreClientContext };\n",
+      "type": "registry:hook",
+      "target": "hooks/use-core-client.ts"
+    },
+    {
       "path": "src/lib/mfa-constants.ts",
       "content": "export const ENTER_OTP = 'enterOtp';\nexport const SHOW_OTP = 'showOtp';\nexport const ENTER_CONTACT = 'enterContact';\n\nexport const ENROLL = 'enroll';\nexport const CONFIRM = 'confirm';\nexport const EMAIL_PLACEHOLDER = 'your@email.com';\nexport const PHONE_NUMBER_PLACEHOLDER = '+1234567890';\n",
       "type": "registry:file",
