@@ -6,6 +6,7 @@
   "description": "A block for managing Multi-Factor Authentication (MFA) factors, including enrollment and deletion.",
   "dependencies": [
     "@auth0-web-ui-components/core",
+    "@auth0/auth0-react",
     "@hookform/resolvers",
     "@radix-ui/react-dialog",
     "class-variance-authority",
@@ -148,6 +149,12 @@
       "content": "'use client';\n\nimport * as React from 'react';\nimport type { InternalProviderProps } from '@/types/auth-types';\nimport { CoreClientContext } from '@/hooks/use-core-client';\nimport { useCoreClientInitialization } from '@/hooks/use-core-client-initialization';\n\nexport const ProxyProvider = ({\n  i18n,\n  authDetails,\n  children,\n}: InternalProviderProps & { children: React.ReactNode }) => {\n  const coreClient = useCoreClientInitialization({\n    authDetails: {\n      ...authDetails,\n      contextInterface: undefined,\n    },\n    i18nOptions: i18n,\n  });\n\n  const coreClientValue = React.useMemo(\n    () => ({\n      coreClient,\n    }),\n    [coreClient],\n  );\n\n  return (\n    <CoreClientContext.Provider value={coreClientValue}>{children}</CoreClientContext.Provider>\n  );\n};\n\nexport default ProxyProvider;\n",
       "type": "registry:file",
       "target": "providers/proxy-provider.tsx"
+    },
+    {
+      "path": "src/providers/spa-provider.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\nimport type { InternalProviderProps } from '@/types/auth-types';\nimport { CoreClientContext } from '@/hooks/use-core-client';\nimport { useCoreClientInitialization } from '@/hooks/use-core-client-initialization';\nimport { useAuth0 } from '@auth0/auth0-react';\n\nexport const SpaProvider = ({\n  i18n,\n  authDetails,\n  children,\n}: InternalProviderProps & { children: React.ReactNode }) => {\n  const auth0ContextInterface = useAuth0();\n\n  const coreClient = useCoreClientInitialization({\n    authDetails: {\n      ...authDetails,\n      contextInterface: auth0ContextInterface,\n    },\n    i18nOptions: i18n,\n  });\n\n  const coreClientValue = React.useMemo(\n    () => ({\n      coreClient,\n    }),\n    [coreClient],\n  );\n\n  return (\n    <CoreClientContext.Provider value={coreClientValue}>{children}</CoreClientContext.Provider>\n  );\n};\n\nexport default SpaProvider;\n",
+      "type": "registry:file",
+      "target": "providers/spa-provider.tsx"
     },
     {
       "path": "src/providers/theme-provider.tsx",
