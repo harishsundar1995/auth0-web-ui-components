@@ -157,6 +157,12 @@
       "target": "hooks/mfa/use-otp-enrollment.ts"
     },
     {
+      "path": "src/hooks/use-config.ts",
+      "content": "import * as React from 'react';\nimport type { Auth0ComponentConfig } from '@/types/auth-types';\n\nexport const Auth0ComponentConfigContext = React.createContext<{\n  config: Auth0ComponentConfig;\n}>({\n  config: {\n    themeSettings: { mode: 'light' },\n    customOverrides: {},\n    loader: undefined,\n  },\n});\n\n/**\n * Hook to access the Auth0 component configuration from context.\n */\nexport function useComponentConfig(): { config: Auth0ComponentConfig } {\n  const context = React.useContext(Auth0ComponentConfigContext);\n\n  if (!context) {\n    throw new Error('useComponentConfig must be used within an Auth0ComponentProvider');\n  }\n\n  return context;\n}\n",
+      "type": "registry:hook",
+      "target": "hooks/use-config.ts"
+    },
+    {
       "path": "src/hooks/use-core-client-initialization.ts",
       "content": "import * as React from 'react';\nimport type {\n  CoreClientInterface,\n  AuthDetailsCore,\n  I18nInitOptions,\n} from '@auth0-web-ui-components/core';\nimport { createCoreClient } from '@auth0-web-ui-components/core';\n\ninterface UseCoreClientInitializationProps {\n  authDetails: AuthDetailsCore;\n  i18nOptions?: I18nInitOptions;\n}\n\n/**\n * Custom hook to handle CoreClient initialization\n */\nexport const useCoreClientInitialization = ({\n  authDetails,\n  i18nOptions,\n}: UseCoreClientInitializationProps) => {\n  const [coreClient, setCoreClient] = React.useState<CoreClientInterface | null>(null);\n\n  React.useEffect(() => {\n    const initializeCoreClient = async () => {\n      try {\n        const initializedCoreClient = await createCoreClient(authDetails, i18nOptions);\n\n        setCoreClient(initializedCoreClient);\n      } catch (error) {\n        console.error('Failed to initialize CoreClient:', error);\n        setCoreClient(null);\n      }\n    };\n\n    initializeCoreClient();\n  }, [\n    authDetails.contextInterface?.getAccessTokenSilently,\n    i18nOptions?.currentLanguage,\n    i18nOptions?.fallbackLanguage,\n  ]);\n\n  return coreClient;\n};\n",
       "type": "registry:hook",
@@ -167,6 +173,18 @@
       "content": "import * as React from 'react';\nimport type { CoreClientInterface } from '@auth0-web-ui-components/core';\n\nconst CoreClientContext = React.createContext<{\n  coreClient: CoreClientInterface | null;\n}>({\n  coreClient: null,\n});\n\n/**\n * Hook to access the CoreClient instance from context.\n *\n * Provides access to the initialized CoreClient which handles API calls and business logic.\n *\n * @returns {{ coreClient: CoreClientInterface | null }} The current CoreClient instance or null if not initialized.\n *\n * @throws {Error} Throws if used outside of an Auth0ComponentProvider.\n */\nexport const useCoreClient = () => {\n  const context = React.useContext(CoreClientContext);\n  if (!context) {\n    throw new Error('useCoreClient must be used within Auth0ComponentProvider');\n  }\n  return context;\n};\n\nexport { CoreClientContext };\n",
       "type": "registry:hook",
       "target": "hooks/use-core-client.ts"
+    },
+    {
+      "path": "src/hooks/use-theme.ts",
+      "content": "'use client';\n\nimport { useContext } from 'react';\nimport { ThemeContext } from '@/providers/theme-provider';\n\n/**\n * useTheme\n *\n * Access the current theme from context. Includes:\n * - branding (UL theme)\n * - customerOverrides (CSS variables)\n * - mergedTheme (computed result)\n */\nexport function useTheme() {\n  const context = useContext(ThemeContext);\n  if (!context) {\n    throw new Error('useTheme must be used within a ThemeProvider');\n  }\n  return context;\n}\n",
+      "type": "registry:hook",
+      "target": "hooks/use-theme.ts"
+    },
+    {
+      "path": "src/hooks/use-translator.ts",
+      "content": "import { useMemo, useCallback } from 'react';\nimport { type TranslationFunction } from '@auth0-web-ui-components/core';\nimport { useCoreClient } from './use-core-client';\n\n/**\n * Custom hook for accessing the i18n service from CoreClient.\n *\n * This hook provides access to the i18n service from the CoreClient context,\n * including translation functions and language change capabilities.\n *\n * @param namespace - The translation namespace (e.g., 'mfa', 'common')\n * @param overrides - Optional translation overrides for the namespace\n * @returns An object containing the translator function and changeLanguage function\n *\n * @example\n * ```tsx\n * // Basic usage with namespace only\n * const { t, changeLanguage } = useTranslator('common');\n *\n * // Usage with overrides\n * const { t } = useTranslator('mfa', {\n *   title: 'Custom Title',\n *   'sms.title': 'Text Message'\n * });\n *\n * // Using the translator\n * const title = t('title');\n * const message = t('welcome', { name: 'John' });\n *\n * // Changing language\n * await changeLanguage('es-ES');\n * ```\n */\nexport function useTranslator(\n  namespace: string,\n  overrides?: Record<string, unknown>,\n): {\n  t: TranslationFunction;\n  changeLanguage: (language: string, fallbackLanguage?: string) => Promise<void>;\n  currentLanguage: string;\n  fallbackLanguage: string | undefined;\n} {\n  const { coreClient } = useCoreClient();\n\n  if (!coreClient) {\n    throw new Error(\n      'useTranslator must be used within Auth0ComponentProvider with initialized CoreClient',\n    );\n  }\n\n  const translator = useMemo(() => {\n    return coreClient.i18nService.translator(namespace, overrides);\n  }, [coreClient, namespace, overrides]);\n\n  const changeLanguage = useCallback(\n    async (language: string, fallbackLanguage?: string) => {\n      await coreClient.i18nService.changeLanguage(language, fallbackLanguage);\n    },\n    [coreClient],\n  );\n\n  return {\n    t: translator,\n    changeLanguage,\n    currentLanguage: coreClient.i18nService.currentLanguage,\n    fallbackLanguage: coreClient.i18nService.fallbackLanguage,\n  };\n}\n",
+      "type": "registry:hook",
+      "target": "hooks/use-translator.ts"
     },
     {
       "path": "src/lib/mfa-constants.ts",
