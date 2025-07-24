@@ -1,0 +1,57 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "auth0-ui-components",
+  "homepage": "https://github.com/auth0/auth0-ui-components",
+  "items": [
+    {
+      "name": "user-mfa-management",
+      "type": "registry:block",
+      "title": "User Mfa Management",
+      "description": "A block for managing Multi-Factor Authentication (MFA) factors, including enrollment and deletion."
+    },
+    {
+      "name": "text-field",
+      "type": "registry:ui"
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui"
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui"
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui"
+    },
+    {
+      "name": "otp-field",
+      "type": "registry:ui"
+    },
+    {
+      "name": "label",
+      "type": "registry:ui"
+    },
+    {
+      "name": "form",
+      "type": "registry:ui"
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui"
+    },
+    {
+      "name": "card",
+      "type": "registry:ui"
+    },
+    {
+      "name": "button",
+      "type": "registry:ui"
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui"
+    }
+  ]
+}
