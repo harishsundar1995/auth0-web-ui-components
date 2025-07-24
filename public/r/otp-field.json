@@ -5,9 +5,7 @@
   "dependencies": [
     "react"
   ],
-  "registryDependencies": [
-    "text-field"
-  ],
+  "registryDependencies": [],
   "files": [
     {
       "path": "src/components/ui/otp-field.tsx",
